@@ -520,10 +520,6 @@ run_libcomposite () {
 			echo MSFT100 > os_desc/qw_sign
 			echo "RNDIS" > functions/rndis.usb0/os_desc/interface.rndis/compatible_id
 			echo "5162001" > functions/rndis.usb0/os_desc/interface.rndis/sub_compatible_id
-
-			mkdir -p functions/ecm.usb0
-			echo ${cpsw_4_mac} > functions/ecm.usb0/host_addr
-			echo ${cpsw_5_mac} > functions/ecm.usb0/dev_addr
 		fi
 
 		mkdir -p functions/acm.usb0
@@ -554,9 +550,23 @@ run_libcomposite () {
 			echo "BeagleBone USB Ethernet" > functions/rndis.usb0/os_desc/interface.rndis/Label/data
 
 			ln -s functions/rndis.usb0 configs/c.1/
-			ln -s functions/ecm.usb0 configs/c.1/
 		fi
 		ln -s functions/acm.usb0 configs/c.1/
+
+		mkdir functions/hid.usb0
+		echo 0 > functions/hid.usb0/protocol
+		echo 0 > functions/hid.usb0/subclass
+		echo 15 > functions/hid.usb0/report_length
+		echo -ne \\x05\\x01\\x09\\x04\\xA1\\x01\\x05\\x09\\x19\\x01\\x29\\x20\\x15\\x00\\x25\\x01\\x75\\x01\\x95\\x20\\x81\\x02\\x05\\x01\\xA1\\x00\\x09\\x30\\x09\\x31\\x09\\x33\\x09\\x34\\x16\\x00\\x80\\x26\\xFF\\x7F\\x75\\x10\\x95\\x04\\x81\\x02\\x09\\x32\\x09\\x35\\x15\\x80\\x25\\x7F\\x75\\x08\\x95\\x02\\x81\\x02\\xC0\\x05\\x01\\x09\\x39\\x09\\x39\\x15\\x01\\x25\\x08\\x95\\x02\\x75\\x04\\x81\\x02\\xC0 > functions/hid.usb0/report_desc
+		ln -s functions/hid.usb0 configs/c.1
+
+		if [ ! "x${USB_NETWORK_DISABLED}" = "xyes" ]; then
+			mkdir -p functions/ecm.usb0
+			echo ${cpsw_4_mac} > functions/ecm.usb0/host_addr
+			echo ${cpsw_5_mac} > functions/ecm.usb0/dev_addr
+			ln -s functions/ecm.usb0 configs/c.1/
+		fi
+
 		if [ "x${has_img_file}" = "xtrue" ] ; then
 			ln -s functions/mass_storage.usb0 configs/c.1/
 		fi
