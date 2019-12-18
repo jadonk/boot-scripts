@@ -549,7 +549,14 @@ run_libcomposite () {
 			ln -s functions/rndis.usb0 configs/c.1/
 		fi
 
-		if [ "x${has_img_file}" = "xtrue" ] ; then
+		if [ true ] ; then
+			/home/debian/uf2-linux/uf2daemon/uf2d
+			echo "${log} enable USB network-backed mass_storage"
+			mkdir -p functions/mass_storage.usb0
+			echo "/dev/nbd0" > functions/mass_storage.usb0/lun.0/file
+
+			ln -s functions/mass_storage.usb0 configs/c.1/
+		elif [ "x${has_img_file}" = "xtrue" ] ; then
 			echo "${log} enable USB mass_storage ${usb_image_file}"
 			mkdir -p functions/mass_storage.usb0
 			echo ${usb_ms_stall} > functions/mass_storage.usb0/stall
@@ -558,6 +565,7 @@ run_libcomposite () {
 			echo ${usb_ms_removable} > functions/mass_storage.usb0/lun.0/removable
 			echo ${usb_ms_ro} > functions/mass_storage.usb0/lun.0/ro
 			echo ${actual_image_file} > functions/mass_storage.usb0/lun.0/file
+			echo "/dev/nbd0" > functions/mass_storage.usb0/lun.0/file
 
 			ln -s functions/mass_storage.usb0 configs/c.1/
 		fi
