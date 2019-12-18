@@ -584,8 +584,10 @@ run_libcomposite () {
 			usb1="enable"
 		fi
 
-		mkdir -p functions/acm.usb0
-		ln -s functions/acm.usb0 configs/c.1/
+		if [ ! "x${USB_SERIAL_DISABLED}" = "xyes" ]; then
+			mkdir -p functions/acm.usb0
+			ln -s functions/acm.usb0 configs/c.1/
+		fi
 
 		#ls /sys/class/udc
 		#v4.4.x-ti
